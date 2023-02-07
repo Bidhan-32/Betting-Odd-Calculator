@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Betting Odd Calculator !!!
+        </title>
+        <style>
+            .button {
+              color: #181818;
+              padding: 15px 32px;
+              text-align: center;
+              display: inline-block;
+              font-size: 16px;
+              margin: 4px 2px;
+              cursor: pointer;
+            }
+
+            .button1 {background-color: #34a5e6 ;}
+        </style>
+        <script type = "text/javascript" src="Saving1.js"></script>
+    </head>
+    <body>
+        <h1 style="color: #34a5e6">Betting Odd Calculator</h1>
+        <p>Bet:</p>
+        <input type="text" id="bet">
+
+        <p>Enter Odd:</p>
+        <input type="text" id="odd">
+
+        <p>Select Odd Format:</p>
+        <form action="#">
+           <select name="odd1" id="odd1">
+            <option value="american">american</option>
+            <option value="decimal">decimal</option>
+            <option value="fraction">fraction</option>
+            </select>
+      </form>
+      <br>
+
+        <button class="button button1" onclick = "si1()">Submit</button>
+
+        <div id="res1"></div>
+
+        <script>
+        function si1() {
+        var B = parseInt(document.getElementById("bet").value);
+        var O2 = document.getElementById("odd").value;
+        var O = parseFloat(document.getElementById("odd").value);
+        var F = document.getElementById("odd1").value;
+    
+    
+        if(F == "decimal")
+            {
+                fractions = O - 1;
+                fraction = decimalToFraction(fractions);
+                american = (O - 1)*100;
+                total = B * O ;
+                win = total - B;
+                p =  (1/O) * 100;
+                probability = parseFloat(p.toFixed(2));
+                result = 'Total Payout:' + total + "<br>" +'To Win:' + win + "<br>" +'Implied Probability:' + probability +'%' +"<br>" + 'fraction:' + fraction +"<br>" + 'american:' + american;
+
+            }
+        else if(F == "american")
+            {
+                if(O >= 0){
+                    fractions = O/100;
+                    fraction = decimalToFraction(fractions);
+                    decimal = 1 + O/100;
+                    win = (B * O)/100 ;
+                    total = win +  B;
+                    p =  (1/decimal) * 100;
+                    probability = parseFloat(p.toFixed(2));
+                    result = 'Total Payout:' + total + "<br>" +'To Win:' + win + "<br>" +'Implied Probability:' + probability +'%' +"<br>" + 'fraction:' + fraction +"<br>" + 'decimal:' + decimal;
+                    }
+                else{
+                    fractions = -100/O;
+                    fraction = decimalToFraction(fractions);
+                    decimal = 1 - (100/O);
+                    total = B * decimal;
+                    win = total - B;
+                    p =  (-O/(-O+100)) * 100;
+                    probability = parseFloat(p.toFixed(2));
+                    result = 'Total Payout:' + total + "<br>" +'To Win:' + win + "<br>" +'Implied Probability:' + probability +'%' +"<br>" + 'fraction:' + fraction +"<br>" + 'decimal:' + decimal;
+                   
+                }
+            }
+    
+        else 
+            {
+                O1 = stringToFraction(O2);
+                if(O1 >= 1){
+                    american = '+' + Math.round(O1*100);
+                }
+                else{
+                    american = Math.round((-100)/O1);
+                }
+                decimal = O1+1;
+                win = O1*B;
+                total = win +  B;
+                p =  (1/decimal) * 100;
+                probability = parseFloat(p.toFixed(2));
+                result = 'Total Payout:' + total + "<br>" +'To Win:' + win + "<br>" +'Implied Probability:' + probability +'%' +"<br>" + 'decimal:' + decimal +"<br>" + 'american:' + american;
+
+            }
+    
+    
+      document.getElementById("res1").innerHTML = result;
+    
+    
+    }
+
+    function stringToFraction(string) {
+    let fraction = string.split('/');
+    let numerator = fraction[0];
+    let denominator = fraction[1];
+    return numerator / denominator;
+    }
+    
+    function decimalToFraction(decimal) {
+    let tolerance = 1.0e-6;
+    let h1 = 1;
+    let h2 = 0;
+    let k1 = 0;
+    let k2 = 1;
+    let b = decimal;
+    let a = Math.floor(b);
+    while (Math.abs(decimal - h1 / k1) > decimal * tolerance) {
+        let aux = h1;
+        h1 = a * h1 + h2;
+        h2 = aux;
+        aux = k1;
+        k1 = a * k1 + k2;
+        k2 = aux;
+        b = 1 / (b - a);
+        a = Math.floor(b);
+    }
+    return h1 + "/" + k1;
+    }
+
+        </script>
+    </body>
+
+   
